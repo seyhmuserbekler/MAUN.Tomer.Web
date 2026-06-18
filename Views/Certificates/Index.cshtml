@@ -1,0 +1,127 @@
+﻿@model IReadOnlyList<MAUN.Tomer.Web.Models.CertificateInventory>
+@{
+    ViewData["Title"] = "Sertifika Yönetimi";
+    var passedCount = Model.Count(x => x.PassingStatus == "BAŞARILI");
+    var failedCount = Model.Count(x => x.PassingStatus != "BAŞARILI");
+    var latestDate = Model.Count > 0 ? Model.Max(x => x.CertificateDate).ToString("dd.MM.yyyy") : "-";
+}
+
+<section class="admin-hero-band">
+    <div>
+        <span class="admin-eyebrow">MAUN Tomer Yönetim Paneli</span>
+        <h1>Sertifika Yönetimi</h1>
+        <p>Sertifika kayıtlarını yönetin, Excel işlemlerini yapın ve doğrulama ekranında yayınlanan verileri güncel tutun.</p>
+    </div>
+    <div class="heading-actions admin-actions">
+        <a class="btn btn-light" asp-action="Export" asp-route-search="@ViewBag.Search">Excel'e Aktar</a>
+        <a class="btn btn-outline-light" asp-action="Import">Excel'den Aktar</a>
+        <a class="btn btn-warning" asp-action="Create">Yeni Sertifika</a>
+    </div>
+</section>
+
+<section class="admin-metrics">
+    <div class="metric-item metric-total">
+        <span>Toplam Kayıt</span>
+        <strong>@Model.Count</strong>
+    </div>
+    <div class="metric-item metric-pass">
+        <span>Başarılı</span>
+        <strong>@passedCount</strong>
+    </div>
+    <div class="metric-item metric-fail">
+        <span>Başarısız</span>
+        <strong>@failedCount</strong>
+    </div>
+    <div class="metric-item metric-date">
+        <span>Son Sertifika Tarihi</span>
+        <strong>@latestDate</strong>
+    </div>
+</section>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="alert alert-success">@message</div>
+}
+@if (TempData["Warning"] is string warning)
+{
+    <div class="alert alert-warning">@warning</div>
+}
+
+<form method="get" class="search-form admin-search" id="certificateSearchForm">
+    <input type="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Kimlik, ad soyad veya sertifika no ile ara" id="certificateSearchInput" autocomplete="off" autofocus />
+    <button type="submit" class="btn btn-success">Ara</button>
+</form>
+
+<div class="admin-table-surface">
+    <div class="table-toolbar">
+        <div>
+            <h2>Kayıt Listesi</h2>
+            <p>Arama sonucuna göre listelenen sertifikalar</p>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string))
+        {
+            <a class="btn btn-sm btn-outline-secondary" asp-action="Index">Filtreyi Temizle</a>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle admin-table">
+            <thead>
+                <tr>
+                    <th>Sıra No</th>
+                    <th>Tarih</th>
+                    <th>Kimlik / Pasaport</th>
+                    <th>Ad Soyad</th>
+                    <th>Sertifika No</th>
+                    <th>Seviye</th>
+                    <th>Toplam</th>
+                    <th>Durum</th>
+                    <th class="text-end">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var index = 0; index < Model.Count; index++)
+                {
+                    var item = Model[index];
+                    var statusClass = item.PassingStatus == "BAŞARILI" ? "status-pass" : "status-fail";
+                    <tr>
+                        <td>@(index + 1)</td>
+                        <td>@item.CertificateDate.ToString("dd.MM.yyyy")</td>
+                        <td>@item.IdentityOrPassportNo</td>
+                        <td class="fw-semibold">@item.FullName</td>
+                        <td>@item.CertificateNo</td>
+                        <td><span class="level-chip">@item.Level</span></td>
+                        <td><span class="score-pill">@item.TotalScore</span></td>
+                        <td><span class="status-badge @statusClass">@item.PassingStatus</span></td>
+                        <td class="text-end table-actions">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.CertificateId">Düzenle</a>
+                            <form asp-action="Delete" asp-route-id="@item.CertificateId" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('@item.FullName adlı kişinin sertifika kaydı kalıcı olarak silinsin mi?')">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const form = document.getElementById('certificateSearchForm');
+            const input = document.getElementById('certificateSearchInput');
+            if (!form || !input) return;
+
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+
+            let timer;
+            input.addEventListener('input', () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => form.requestSubmit(), 350);
+            });
+        })();
+    </script>
+}

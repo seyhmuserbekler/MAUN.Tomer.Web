@@ -1,0 +1,82 @@
+﻿@model MAUN.Tomer.Web.Models.CertificateSearchViewModel
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Sertifika Sorgulama";
+    var institutionName = Configuration["Institution:Name"] ?? "Muş Alparslan Üniversitesi";
+    var unitName = Configuration["Institution:UnitName"] ?? "Türkçe Öğretimi Uygulama ve Araştırma Merkezi";
+}
+
+<section class="validation-hero">
+    <div>
+        <p class="eyebrow">@institutionName</p>
+        <h1>MAUN Tomer Sertifika Doğrulama</h1>
+        <p>@unitName tarafından düzenlenen sertifikaları T.C. kimlik veya pasaport numarası ile sorgulayabilirsiniz.</p>
+    </div>
+</section>
+
+<section class="validation-panel">
+    <form asp-action="Index" method="post" class="row g-3 align-items-end">
+        @Html.AntiForgeryToken()
+        <div class="col-lg-8">
+            <label asp-for="IdentityOrPassportNo" class="form-label"></label>
+            <input asp-for="IdentityOrPassportNo" class="form-control form-control-lg" autocomplete="off" />
+            <span asp-validation-for="IdentityOrPassportNo" class="text-danger"></span>
+        </div>
+        <div class="col-lg-4 d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Sorgula</button>
+        </div>
+    </form>
+</section>
+
+@if (Model.SearchCompleted)
+{
+    if (Model.Results is null || Model.Results.Count == 0)
+    {
+        <div class="alert alert-warning mt-4">Girilen bilgiye ait sertifika kaydı bulunamadı.</div>
+    }
+    else
+    {
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered align-middle certificate-table">
+                <thead>
+                    <tr>
+                        <th>Sertifika Tarihi</th>
+                        <th>Kimlik / Pasaport</th>
+                        <th>Ad Soyad</th>
+                        <th>Sertifika No</th>
+                        <th>Seviye</th>
+                        <th>Toplam</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Results)
+                    {
+                        <tr>
+                            <td>@item.CertificateDate.ToString("dd.MM.yyyy")</td>
+                            <td>@item.IdentityOrPassportNo</td>
+                            <td>@item.FullName</td>
+                            <td>@item.CertificateNo</td>
+                            <td>@item.Level</td>
+                            <td>@item.TotalScore</td>
+                            @{ var statusClass = item.PassingStatus == "BAŞARILI" ? "status-pass" : "status-fail"; }
+                            <td><span class="status-badge @statusClass">@item.PassingStatus</span></td>
+                        </tr>
+                        <tr class="score-row">
+                            <td colspan="7">
+                                Okuma: @item.ReadingScore |
+                                Yazma: @item.WritingScore |
+                                Dinleme: @item.ListeningScore |
+                                Konuşma: @item.SpeakingScore
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

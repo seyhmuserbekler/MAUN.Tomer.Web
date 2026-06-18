@@ -1,0 +1,79 @@
+﻿@model MAUN.Tomer.Web.Models.CertificateInventory
+@{
+    var isNew = Model.CertificateId == 0;
+    ViewData["Title"] = isNew ? "Yeni Sertifika" : "Sertifika Düzenle";
+}
+
+<div class="page-heading">
+    <div>
+        <h1>@ViewData["Title"]</h1>
+        <p>Toplam puan ve başarı durumu sistem tarafından otomatik hesaplanır.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Listeye Dön</a>
+</div>
+
+<form method="post" class="editor-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label asp-for="CertificateDate" class="form-label"></label>
+            <input asp-for="CertificateDate" class="form-control" />
+            <span asp-validation-for="CertificateDate" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="IdentityOrPassportNo" class="form-label"></label>
+            <input asp-for="IdentityOrPassportNo" class="form-control" />
+            <span asp-validation-for="IdentityOrPassportNo" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="CertificateNo" class="form-label"></label>
+            <input asp-for="CertificateNo" class="form-control" />
+            <span asp-validation-for="CertificateNo" class="text-danger"></span>
+        </div>
+        <div class="col-md-8">
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Level" class="form-label"></label>
+            <input asp-for="Level" class="form-control" />
+            <span asp-validation-for="Level" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="ReadingScore" class="form-label"></label>
+            <input asp-for="ReadingScore" class="form-control" />
+            <span asp-validation-for="ReadingScore" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="WritingScore" class="form-label"></label>
+            <input asp-for="WritingScore" class="form-control" />
+            <span asp-validation-for="WritingScore" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="ListeningScore" class="form-label"></label>
+            <input asp-for="ListeningScore" class="form-control" />
+            <span asp-validation-for="ListeningScore" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="SpeakingScore" class="form-label"></label>
+            <input asp-for="SpeakingScore" class="form-control" />
+            <span asp-validation-for="SpeakingScore" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="alert alert-secondary mt-4 mb-0">
+        Toplam Puan = Okuma + Yazma + Dinleme + Konuşma. Toplam puan 60 ve üzeriyse durum "Geçti", altındaysa "Kaldı" olur.
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Vazgeç</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

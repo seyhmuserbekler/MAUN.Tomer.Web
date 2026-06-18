@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="160" height="48" viewBox="0 0 160 48" role="img" aria-label="MAUN Tomer">
+  <rect width="48" height="48" rx="8" fill="#14532d"/>
+  <path d="M12 34V14h5.4l6.6 10.4L30.6 14H36v20h-5V22.4l-5.2 8h-3.6l-5.2-8V34h-5z" fill="#fff"/>
+  <text x="58" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#14532d">MAUN</text>
+  <text x="58" y="38" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#1f2933">Tomer</text>
+</svg>

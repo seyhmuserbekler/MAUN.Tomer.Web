@@ -1,0 +1,51 @@
+﻿@model MAUN.Tomer.Web.Models.AdminUserEditViewModel
+@{
+    var isNew = Model.AdminUserId == 0;
+    ViewData["Title"] = isNew ? "Yeni Kullanıcı" : "Kullanıcı Düzenle";
+}
+
+<div class="page-heading">
+    <div>
+        <h1>@ViewData["Title"]</h1>
+        <p>@(isNew ? "Yeni admin kullanıcısı oluşturun." : "Kullanıcı bilgilerini ve gerekiyorsa şifresini güncelleyin.")</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Listeye Dön</a>
+</div>
+
+<form method="post" class="editor-form user-editor-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="Username" class="form-label"></label>
+            <input asp-for="Username" class="form-control" autocomplete="off" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="FullName" class="form-label"></label>
+            <input asp-for="FullName" class="form-control" autocomplete="off" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" autocomplete="new-password" placeholder="@(isNew ? "Zorunlu" : "Boş bırakırsanız değişmez")" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+            <div class="form-check form-switch user-active-switch">
+                <input asp-for="IsActive" class="form-check-input" />
+                <label asp-for="IsActive" class="form-check-label"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Vazgeç</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

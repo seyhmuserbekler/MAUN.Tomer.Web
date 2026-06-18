@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Excel Aktar";
+}
+
+<div class="page-heading">
+    <div>
+        <h1>Excel Aktar</h1>
+        <p>İlk satır başlık olmalıdır. Toplam puan ve başarı durumu sistem tarafından otomatik hesaplanır.</p>
+    </div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Listeye Dön</a>
+</div>
+
+<div class="alert alert-info">
+    Sertifika Tarihi, Kimlik/Pasaport No, Ad Soyad, Sertifika No, Seviye, Okuma, Yazma, Dinleme, Konuşma
+</div>
+
+<form asp-action="Import" method="post" enctype="multipart/form-data" class="editor-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <label for="file" class="form-label">Excel Dosyası (.xlsx)</label>
+    <input id="file" name="file" type="file" accept=".xlsx" class="form-control" required />
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success">Aktar</button>
+    </div>
+</form>
