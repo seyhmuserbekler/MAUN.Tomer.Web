@@ -98,4 +98,4 @@ Toplam puan ve başarı durumu sistem tarafından otomatik hesaplanır.
 
 ## Kurum
 
-Muş Alparslan Üniversitesi Bilgi İşlem Daire Başkanlığı - MAUN Tomer
+Muş Alparslan Üniversitesi - MAUN Tomer
